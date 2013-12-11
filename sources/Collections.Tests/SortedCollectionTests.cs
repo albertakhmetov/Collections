@@ -168,5 +168,40 @@ namespace Collections
             Assert.AreEqual(1, invokeCount);
             Assert.AreEqual(items.Length + sortedCollectionInitSize, sortedCollection.Count);
         }
+
+        [TestMethod]
+        public void AddRangeToNotEmptyBigTest()
+        {
+            var items = new int[] { 3, 4, 5, 8, 19 };
+
+            var sortedCollection = new SortedCollection();
+            sortedCollection.Add(1);
+            sortedCollection.Add(2);
+            sortedCollection.Add(6);
+            sortedCollection.Add(9);
+            sortedCollection.Add(10);
+
+            const int sortedCollectionInitSize = 5;
+
+            var invokeCount = 0;
+            var expectedInvokeLen = new int[] { 3, 1, 1 };
+            var expectedInvokeIndex = new int[] { 2, 6, 9 };
+
+            sortedCollection.CollectionChanged += (x, y) =>
+            {             
+                Assert.IsTrue(invokeCount < expectedInvokeLen.Length);
+
+                Assert.AreEqual(NotifyCollectionChangedAction.Add, y.Action);
+                Assert.AreEqual(expectedInvokeLen[invokeCount], y.NewItems.Count);
+                Assert.AreEqual(expectedInvokeIndex[invokeCount], y.NewStartingIndex); 
+                
+                invokeCount++;
+            };
+
+            sortedCollection.AddRange(items);
+
+            Assert.AreEqual(expectedInvokeLen.Length, invokeCount);
+            Assert.AreEqual(items.Length + sortedCollectionInitSize, sortedCollection.Count);
+        }
     }
 }
