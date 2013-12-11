@@ -119,5 +119,26 @@ namespace Collections
 
             sortedCollection.CollectionChanged -= eventHandler;
         }
+
+        [TestMethod]
+        public void AddRangeTest()
+        {
+            var items = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            var sortedCollection = new SortedCollection();
+
+            var invokeCount = 0;
+            sortedCollection.CollectionChanged += (x, y) => {
+                invokeCount++;
+
+                Assert.AreEqual(NotifyCollectionChangedAction.Add, y.Action);
+                Assert.AreEqual(items.Length, y.NewItems.Count);
+                Assert.AreEqual(0, y.NewStartingIndex);
+            };
+
+            sortedCollection.AddRange(items);
+
+            Assert.AreEqual(1, invokeCount);
+        }
     }
 }

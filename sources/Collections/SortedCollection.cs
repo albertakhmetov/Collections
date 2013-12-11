@@ -32,6 +32,13 @@ namespace Collections
                     i++;
         }
 
+        public void AddRange(IEnumerable<int> items)
+        {
+            _items.AddRange(items);
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, _items, 0));
+        }
+
         public int Count
         {
             get { return _items.Count; }
