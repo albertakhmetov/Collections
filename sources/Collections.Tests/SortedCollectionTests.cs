@@ -13,23 +13,50 @@ namespace Collections
         [TestMethod]
         public void AddTest()
         {
-            var item = 1;
+            var sortedCollection = new SortedCollection();
+
+            AddItem(sortedCollection, 10, -1, 1);
+        }
+
+        [TestMethod]
+        public void AddTwiceTest()
+        {
+            var sortedCollection = new SortedCollection();
+
+            AddItem(sortedCollection, 3, -1, 1);
+            AddItem(sortedCollection, 2, 0, 2);
+
+            var en = sortedCollection.GetEnumerator();
+
+            en.MoveNext();
+            Assert.AreEqual(2, en.Current);
+            en.MoveNext();
+            Assert.AreEqual(3, en.Current);
+        }
+
+        private static void AddItem(SortedCollection sortedCollection, int item, int position, int totalCount)
+        {
             var wasInvoke = false;
 
-            var sortedCollection = new SortedCollection();
-            sortedCollection.CollectionChanged += (x, y) =>
-                {
-                    wasInvoke = true;
+            NotifyCollectionChangedEventHandler eventHandler = delegate(object x, NotifyCollectionChangedEventArgs e)
+            {
+                wasInvoke = true;
 
-                    Assert.AreEqual(NotifyCollectionChangedAction.Add, y.Action);
-                    Assert.AreEqual(1, y.NewItems.Count);
-                    Assert.AreEqual(item, y.NewItems[0]);
-                };
+                if (position > -1)
+                    Assert.AreEqual(position, e.NewStartingIndex);
 
+                Assert.AreEqual(NotifyCollectionChangedAction.Add, e.Action);
+                Assert.AreEqual(1, e.NewItems.Count);
+                Assert.AreEqual(item, e.NewItems[0]);
+            };
+
+            sortedCollection.CollectionChanged += eventHandler;
             sortedCollection.Add(item);
 
-            Assert.AreEqual(1, sortedCollection.Count); 
-            Assert.IsTrue(wasInvoke);           
+            Assert.AreEqual(totalCount, sortedCollection.Count);
+            Assert.IsTrue(wasInvoke);
+
+            sortedCollection.CollectionChanged -= eventHandler;
         }
     }
 }
