@@ -10,26 +10,29 @@ using System.Threading.Tasks;
 
 namespace Collections
 {
-    public class SortedCollection : INotifyCollectionChanged, IEnumerable<int>    {
+    public class SortedCollection : INotifyCollectionChanged, IEnumerable<int>
+    {
         private List<int> _items = new List<int>();
 
         public void Add(int item)
         {
-            if (_items.Count > 0 && _items[0] < item)
-            {
-                _items.Add(item);
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
-            }
-            else
-            {
-                _items.Insert(0, item);
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, 0));
-            }            
+            var i = 0;
+
+            while (i <= _items.Count)
+                if (i == _items.Count || item < _items[i])
+                {
+                    _items.Insert(i, item);
+
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item, i));
+                    break;
+                }
+                else
+                    i++;
         }
 
         public int Count
         {
-            get { return _items.Count; }             
+            get { return _items.Count; }
         }
 
         protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e)

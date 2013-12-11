@@ -15,7 +15,7 @@ namespace Collections
         {
             var sortedCollection = new SortedCollection();
 
-            AddItem(sortedCollection, 10, -1, 1);
+            AddItem(sortedCollection, 10, null, 1);
         }
 
         [TestMethod]
@@ -23,7 +23,7 @@ namespace Collections
         {
             var sortedCollection = new SortedCollection();
 
-            AddItem(sortedCollection, 3, -1, 1);
+            AddItem(sortedCollection, 3, null, 1);
             AddItem(sortedCollection, 2, 0, 2);
 
             var en = sortedCollection.GetEnumerator();
@@ -34,7 +34,52 @@ namespace Collections
             Assert.AreEqual(3, en.Current);
         }
 
-        private static void AddItem(SortedCollection sortedCollection, int item, int position, int totalCount)
+        [TestMethod]
+        public void Add3xTest()
+        {
+            var sortedCollection = new SortedCollection();
+
+            AddItem(sortedCollection, 5, null, 1);
+            AddItem(sortedCollection, 2, 0, 2);
+            AddItem(sortedCollection, 3, 1, 3);
+
+            var en = sortedCollection.GetEnumerator();
+
+            en.MoveNext();
+            Assert.AreEqual(2, en.Current);
+            en.MoveNext();
+            Assert.AreEqual(3, en.Current);
+            en.MoveNext();
+            Assert.AreEqual(5, en.Current);
+        }
+
+        [TestMethod]
+        public void Add5xTest()
+        {
+            var sortedCollection = new SortedCollection();
+
+            AddItem(sortedCollection, 5, null, 1);
+            AddItem(sortedCollection, 2, 0, 2);
+            AddItem(sortedCollection, 4, 1, 3);
+            AddItem(sortedCollection, 3, 1, 4);
+            AddItem(sortedCollection, 10, 4, 5);
+
+            var en = sortedCollection.GetEnumerator();
+
+            en.MoveNext();
+            Assert.AreEqual(2, en.Current);
+            en.MoveNext();
+            Assert.AreEqual(3, en.Current);
+            en.MoveNext();
+            Assert.AreEqual(4, en.Current);
+            en.MoveNext();
+            Assert.AreEqual(5, en.Current);
+            en.MoveNext();
+            Assert.AreEqual(10, en.Current);
+        }
+
+
+        private static void AddItem(SortedCollection sortedCollection, int item, int? position, int totalCount)
         {
             var wasInvoke = false;
 
@@ -42,8 +87,8 @@ namespace Collections
             {
                 wasInvoke = true;
 
-                if (position > -1)
-                    Assert.AreEqual(position, e.NewStartingIndex);
+                if (position.HasValue)
+                    Assert.AreEqual(position.Value, e.NewStartingIndex);
 
                 Assert.AreEqual(NotifyCollectionChangedAction.Add, e.Action);
                 Assert.AreEqual(1, e.NewItems.Count);
