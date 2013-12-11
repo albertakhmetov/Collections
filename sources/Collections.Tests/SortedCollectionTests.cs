@@ -78,6 +78,22 @@ namespace Collections
             Assert.AreEqual(10, en.Current);
         }
 
+        [TestMethod]
+        public void AddExistsTest()
+        {
+            var sortedCollection = new SortedCollection();
+
+            sortedCollection.Add(1);
+            sortedCollection.Add(0);
+
+            var wasInvoke = false;
+            sortedCollection.CollectionChanged += (x, y) => { wasInvoke = true; };
+            sortedCollection.Add(1);
+
+            Assert.IsFalse(wasInvoke);
+            Assert.AreEqual(2, sortedCollection.Count);
+        }
+
 
         private static void AddItem(SortedCollection sortedCollection, int item, int? position, int totalCount)
         {

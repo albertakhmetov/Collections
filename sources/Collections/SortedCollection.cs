@@ -19,7 +19,9 @@ namespace Collections
             var i = 0;
 
             while (i <= _items.Count)
-                if (i == _items.Count || item < _items[i])
+                if (i < _items.Count && item == _items[i])
+                    break;
+                else if (i == _items.Count || item < _items[i])
                 {
                     _items.Insert(i, item);
 
