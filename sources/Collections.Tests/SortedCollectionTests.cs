@@ -139,6 +139,34 @@ namespace Collections
             sortedCollection.AddRange(items);
 
             Assert.AreEqual(1, invokeCount);
+            Assert.AreEqual(items.Length, sortedCollection.Count);
+        }
+
+        [TestMethod]
+        public void AddRangeToNotEmptyTest()
+        {
+            var items = new int[] { 3, 4, 5, 6, 7, 8, 9 };
+
+            var sortedCollection = new SortedCollection();
+            sortedCollection.Add(1);
+            sortedCollection.Add(2);
+
+            const int sortedCollectionInitSize = 2;
+
+            var invokeCount = 0;
+            sortedCollection.CollectionChanged += (x, y) =>
+            {
+                invokeCount++;
+
+                Assert.AreEqual(NotifyCollectionChangedAction.Add, y.Action);
+                Assert.AreEqual(items.Length, y.NewItems.Count);
+                Assert.AreEqual(sortedCollectionInitSize, y.NewStartingIndex);
+            };
+
+            sortedCollection.AddRange(items);
+
+            Assert.AreEqual(1, invokeCount);
+            Assert.AreEqual(items.Length + sortedCollectionInitSize, sortedCollection.Count);
         }
     }
 }

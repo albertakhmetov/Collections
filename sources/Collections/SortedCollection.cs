@@ -34,9 +34,32 @@ namespace Collections
 
         public void AddRange(IEnumerable<int> items)
         {
-            _items.AddRange(items);
+            var i = 0;
+            var notifyList = new List<int>();
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, _items, 0));
+            var itemsEnumerator = items.GetEnumerator();
+            itemsEnumerator.MoveNext();
+
+            while (i <= _items.Count)
+            {
+                if (i == _items.Count || itemsEnumerator.Current < _items[i])
+                {
+                    _items.Insert(i, itemsEnumerator.Current);
+                    notifyList.Add(itemsEnumerator.Current);
+
+                    if (i == _items.Count || !itemsEnumerator.MoveNext())
+                        break;
+                }
+                else if (notifyList.Count > 0)
+                {
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, notifyList, i - notifyList.Count));
+                    notifyList.Clear();
+                }
+
+                i++;
+            }
+            if (notifyList.Count > 0)
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, notifyList, i + 1 - notifyList.Count));
         }
 
         public int Count
