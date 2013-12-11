@@ -67,6 +67,11 @@ namespace Collections
             get { return _items.Count; }
         }
 
+        public int this[int index]
+        {
+            get { return _items[index]; }             
+        }
+
         protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             if (CollectionChanged != null)

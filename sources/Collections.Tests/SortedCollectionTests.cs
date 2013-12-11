@@ -26,12 +26,7 @@ namespace Collections
             AddItem(sortedCollection, 3, null, 1);
             AddItem(sortedCollection, 2, 0, 2);
 
-            var en = sortedCollection.GetEnumerator();
-
-            en.MoveNext();
-            Assert.AreEqual(2, en.Current);
-            en.MoveNext();
-            Assert.AreEqual(3, en.Current);
+            CheckCollectionOrder(sortedCollection);
         }
 
         [TestMethod]
@@ -43,14 +38,7 @@ namespace Collections
             AddItem(sortedCollection, 2, 0, 2);
             AddItem(sortedCollection, 3, 1, 3);
 
-            var en = sortedCollection.GetEnumerator();
-
-            en.MoveNext();
-            Assert.AreEqual(2, en.Current);
-            en.MoveNext();
-            Assert.AreEqual(3, en.Current);
-            en.MoveNext();
-            Assert.AreEqual(5, en.Current);
+            CheckCollectionOrder(sortedCollection);
         }
 
         [TestMethod]
@@ -64,18 +52,7 @@ namespace Collections
             AddItem(sortedCollection, 3, 1, 4);
             AddItem(sortedCollection, 10, 4, 5);
 
-            var en = sortedCollection.GetEnumerator();
-
-            en.MoveNext();
-            Assert.AreEqual(2, en.Current);
-            en.MoveNext();
-            Assert.AreEqual(3, en.Current);
-            en.MoveNext();
-            Assert.AreEqual(4, en.Current);
-            en.MoveNext();
-            Assert.AreEqual(5, en.Current);
-            en.MoveNext();
-            Assert.AreEqual(10, en.Current);
+            CheckCollectionOrder(sortedCollection);
         }
 
         [TestMethod]
@@ -140,6 +117,7 @@ namespace Collections
 
             Assert.AreEqual(1, invokeCount);
             Assert.AreEqual(items.Length, sortedCollection.Count);
+            CheckCollectionOrder(sortedCollection);
         }
 
         [TestMethod]
@@ -167,6 +145,7 @@ namespace Collections
 
             Assert.AreEqual(1, invokeCount);
             Assert.AreEqual(items.Length + sortedCollectionInitSize, sortedCollection.Count);
+            CheckCollectionOrder(sortedCollection);
         }
 
         [TestMethod]
@@ -202,6 +181,16 @@ namespace Collections
 
             Assert.AreEqual(expectedInvokeLen.Length, invokeCount);
             Assert.AreEqual(items.Length + sortedCollectionInitSize, sortedCollection.Count);
+
+            CheckCollectionOrder(sortedCollection);
+        }
+
+        private static void CheckCollectionOrder(SortedCollection sortedCollection)
+        {
+            var expected = sortedCollection.OrderBy(i => i).ToArray();
+
+            for (var i = 0; i < expected.Length; i++)
+                Assert.AreEqual(expected[i], sortedCollection[i]);
         }
     }
 }
