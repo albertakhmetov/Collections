@@ -37,11 +37,12 @@ namespace Collections
             if (items == null)
                 return;
 
+            var itemsEnumerator = items.GetEnumerator();
+            if (!itemsEnumerator.MoveNext())
+                return;
+
             var i = 0;
             var notifyList = new List<int>();
-
-            var itemsEnumerator = items.GetEnumerator();
-            itemsEnumerator.MoveNext();
 
             while (i <= _items.Count)
             {

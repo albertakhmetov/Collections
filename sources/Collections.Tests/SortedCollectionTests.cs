@@ -199,5 +199,12 @@ namespace Collections
             var sortedCollection = new SortedCollection();
             sortedCollection.AddRange(null);
         }
+
+        [TestMethod]
+        public void AddRangeWithEmptyItemsTest()
+        {
+            var sortedCollection = new SortedCollection();
+            sortedCollection.AddRange(new int[0]);
+        }
     }
 }
