@@ -34,6 +34,9 @@ namespace Collections
 
         public void AddRange(IEnumerable<int> items)
         {
+            if (items == null)
+                return;
+
             var i = 0;
             var notifyList = new List<int>();
 

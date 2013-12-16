@@ -192,5 +192,12 @@ namespace Collections
             for (var i = 0; i < expected.Length; i++)
                 Assert.AreEqual(expected[i], sortedCollection[i]);
         }
+
+        [TestMethod]
+        public void AddRangeWithNullItemsTest()
+        {
+            var sortedCollection = new SortedCollection();
+            sortedCollection.AddRange(null);
+        }
     }
 }
