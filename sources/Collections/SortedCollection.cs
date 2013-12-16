@@ -37,7 +37,7 @@ namespace Collections
             if (items == null)
                 return;
 
-            var itemsEnumerator = items.GetEnumerator();
+            var itemsEnumerator = Order(items).GetEnumerator();
             if (!itemsEnumerator.MoveNext())
                 return;
 
@@ -66,6 +66,11 @@ namespace Collections
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, notifyList, i + 1 - notifyList.Count));
         }
 
+        private IEnumerable<int> Order(IEnumerable<int> items)
+        {
+            return items.OrderBy(i => i);
+        }
+
         public int Count
         {
             get { return _items.Count; }
@@ -73,7 +78,7 @@ namespace Collections
 
         public int this[int index]
         {
-            get { return _items[index]; }             
+            get { return _items[index]; }
         }
 
         protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e)

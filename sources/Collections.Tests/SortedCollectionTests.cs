@@ -185,6 +185,23 @@ namespace Collections
             CheckCollectionOrder(sortedCollection);
         }
 
+        [TestMethod]
+        public void AddRangeWithUnsortedItemsTest()
+        {
+            var items = new int[] { 8, 7, 5, 34, 19 };
+
+            var sortedCollection = new SortedCollection();
+            sortedCollection.Add(1);
+            sortedCollection.Add(2);
+            sortedCollection.Add(6);
+            sortedCollection.Add(9);         
+            sortedCollection.Add(10);
+
+            sortedCollection.AddRange(items);
+
+            CheckCollectionOrder(sortedCollection);
+        }
+
         private static void CheckCollectionOrder(SortedCollection sortedCollection)
         {
             var expected = sortedCollection.OrderBy(i => i).ToArray();
