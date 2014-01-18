@@ -381,5 +381,21 @@ namespace Collections
             Assert.AreEqual(7, _sortedCollection[2]);
         }
 
+        [TestMethod]
+        public void ClearTest()
+        {
+            _sortedCollection = new SortedCollection<int>(true);
+            _sortedCollection.Add(-3);
+            _sortedCollection.Add(-1);
+            _sortedCollection.Add(5);
+            _sortedCollection.Add(7);
+
+            var wasRemoveInvoked = false;
+            _sortedCollection.CollectionChanged += (x, y) => wasRemoveInvoked = y.Action == NotifyCollectionChangedAction.Reset;
+            _sortedCollection.Clear();
+            Assert.IsTrue(wasRemoveInvoked);
+
+            Assert.AreEqual(0, _sortedCollection.Count);
+        }
     }
 }

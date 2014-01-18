@@ -163,6 +163,12 @@ namespace Collections
                 Remove(_items[index]);
         }
 
+        public void Clear()
+        {
+            _items.Clear();
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
+
         private bool Compare(T x, T y)
         {
             return Comparer.Compare(x, y) == (SortDirection == Collections.SortDirection.Asc ? -1 : 1);
