@@ -105,7 +105,8 @@ namespace Collections
             var sortedCollection = new SortedCollection();
 
             var invokeCount = 0;
-            sortedCollection.CollectionChanged += (x, y) => {
+            sortedCollection.CollectionChanged += (x, y) =>
+            {
                 invokeCount++;
 
                 Assert.AreEqual(NotifyCollectionChangedAction.Add, y.Action);
@@ -167,13 +168,13 @@ namespace Collections
             var expectedInvokeIndex = new int[] { 2, 6, 9 };
 
             sortedCollection.CollectionChanged += (x, y) =>
-            {             
+            {
                 Assert.IsTrue(invokeCount < expectedInvokeLen.Length);
 
                 Assert.AreEqual(NotifyCollectionChangedAction.Add, y.Action);
                 Assert.AreEqual(expectedInvokeLen[invokeCount], y.NewItems.Count);
-                Assert.AreEqual(expectedInvokeIndex[invokeCount], y.NewStartingIndex); 
-                
+                Assert.AreEqual(expectedInvokeIndex[invokeCount], y.NewStartingIndex);
+
                 invokeCount++;
             };
 
@@ -194,7 +195,7 @@ namespace Collections
             sortedCollection.Add(1);
             sortedCollection.Add(2);
             sortedCollection.Add(6);
-            sortedCollection.Add(9);         
+            sortedCollection.Add(9);
             sortedCollection.Add(10);
 
             sortedCollection.AddRange(items);
@@ -222,6 +223,23 @@ namespace Collections
         {
             var sortedCollection = new SortedCollection();
             sortedCollection.AddRange(new int[0]);
+        }
+
+        [TestMethod]
+        public void AddNotUniqueRangeItemsTest()
+        {
+            var items = new int[] { 1, 3, 4,5,5, 4, 6, 8, };
+
+            var sortedCollection = new SortedCollection();
+            sortedCollection.Add(1);
+            sortedCollection.Add(3);
+            sortedCollection.Add(5);
+            sortedCollection.Add(7);
+
+            sortedCollection.AddRange(items);
+
+            Assert.AreEqual(12, sortedCollection.Count);
+            CheckCollectionOrder(sortedCollection);
         }
     }
 }
