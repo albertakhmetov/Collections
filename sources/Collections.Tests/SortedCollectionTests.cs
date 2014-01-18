@@ -291,5 +291,44 @@ namespace Collections
             Assert.AreEqual(7, _sortedCollection.Count);
             CheckCollectionOrder();
         }
+
+        private class FakeComparer : System.Collections.Generic.Comparer<int>
+        {
+            public override int Compare(int x, int y)
+            {
+                return Default.Compare(Math.Abs(x), Math.Abs(y));
+            }
+        }
+
+        [TestMethod]
+        public void CustomComparerTest()
+        {
+            _sortedCollection = new SortedCollection<int>(true);
+            _sortedCollection.Add(-3);
+            _sortedCollection.Add(-1);
+            _sortedCollection.Add(5);
+            _sortedCollection.Add(7);
+
+            CheckCollectionOrder();
+
+            var wasChanged = false;
+            _sortedCollection.ComparerChanged += (x, y) => wasChanged = true;
+            _sortedCollection.Comparer = new FakeComparer();
+            Assert.IsTrue(wasChanged);
+            wasChanged = false;
+
+            Assert.AreEqual(-1, _sortedCollection[0]);
+            Assert.AreEqual(-3, _sortedCollection[1]);
+            Assert.AreEqual(5, _sortedCollection[2]);
+            Assert.AreEqual(7, _sortedCollection[3]);
+
+            _sortedCollection.Comparer = null;
+            Assert.IsTrue(wasChanged);
+
+            Assert.AreEqual(-3, _sortedCollection[0]);
+            Assert.AreEqual(-1, _sortedCollection[1]);
+            Assert.AreEqual(5, _sortedCollection[2]);
+            Assert.AreEqual(7, _sortedCollection[3]);
+        }
     }
 }

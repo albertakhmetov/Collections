@@ -34,6 +34,15 @@ namespace Collections
         public Comparer<T> Comparer
         {
             get { return _comparer ?? Comparer<T>.Default; }
+            set
+            {
+                if (_comparer != value)
+                {
+                    _comparer = value;
+                    UpdateItems();
+                    OnComparerChanged();
+                }
+            }
         }
 
         public SortDirection SortDirection
@@ -45,9 +54,10 @@ namespace Collections
                 {
                     _sortDirection = value;
                     UpdateItems();
+                    OnSortDirectionChanged();
                 }
             }
-        }
+        }       
 
         public bool IsUnique
         {
@@ -148,6 +158,8 @@ namespace Collections
         {
             if (CollectionChanged != null)
                 CollectionChanged(this, e);
+
+            OnCountChanged();
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -161,5 +173,28 @@ namespace Collections
         {
             return _items.GetEnumerator();
         }
+
+        private void OnComparerChanged()
+        {
+            if (ComparerChanged != null)
+                ComparerChanged(this, EventArgs.Empty);
+        }
+
+        private void OnSortDirectionChanged()
+        {
+            if (SortDirectionChanged != null)
+                SortDirectionChanged(this, EventArgs.Empty);
+        }
+
+        private void OnCountChanged()
+        {
+            if (CountChanged != null)
+                CountChanged(this, EventArgs.Empty);
+        }
+
+        public event EventHandler ComparerChanged;
+        public event EventHandler SortDirectionChanged;
+        public event EventHandler CountChanged;
+
     }
 }
