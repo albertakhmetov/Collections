@@ -16,8 +16,16 @@ namespace Collections
         Desc,
     }
 
+    /// <summary>
+    /// Represents a collection of items that are sorted based on the associated <see cref="System.Collections.Generic.Comparer{T}"/> implementation
+    /// </summary>
+    /// <typeparam name="T">The type of items in the collection</typeparam>
     public class SortedCollection<T> : INotifyCollectionChanged, IEnumerable<T>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SortedCollection{T}"/> class that is empty
+        /// </summary>
+        /// <param name="isUnique">Value indicating whether a <see cref="SortedCollection{T}"/> object has only unique elements</param>
         public SortedCollection(bool isUnique)
         {
             _items = new List<T>();
@@ -31,6 +39,9 @@ namespace Collections
         private Comparer<T> _comparer;
         private SortDirection _sortDirection;
 
+        /// <summary>
+        /// Gets or sets the <see cref="System.Collections.Generic.Comparer{T}"/> for the <see cref="SortedCollection{T}"/> 
+        /// </summary>
         public Comparer<T> Comparer
         {
             get { return _comparer ?? Comparer<T>.Default; }
@@ -45,6 +56,9 @@ namespace Collections
             }
         }
 
+        /// <summary>
+        /// Gets or sets the <see cref="SortDirection"/> for the <see cref="SortedCollection{T}"/> 
+        /// </summary>
         public SortDirection SortDirection
         {
             get { return _sortDirection; }
@@ -59,11 +73,18 @@ namespace Collections
             }
         }       
 
+        /// <summary>
+        /// Gets a value indicating whether a <see cref="SortedCollection{T}"/> object has unique elements
+        /// </summary>
         public bool IsUnique
         {
             get { return _isUnique; }
         }
 
+        /// <summary>
+        /// Adds an object to the <see cref="SortedCollection"/>
+        /// </summary>
+        /// <param name="item">The object to be added to <see cref="SortedCollection{T}"/></param>
         public void Add(T item)
         {
             var i = 0;
@@ -82,6 +103,13 @@ namespace Collections
                     i++;
         }
 
+        /// <summary>
+        /// Adds the elements of the specified collection to the <see cref="SortedCollection{T}"/>.
+        /// </summary>
+        /// <param name="items">
+        /// The collection whose elements should be added to the <see cref="SortedCollection{T}"/>.
+        /// The collection itself cannot be null, but it can contain elements that are null, if type T is a reference type.
+        /// </param>
         public void AddRange(IEnumerable<T> items)
         {
             if (items == null)
@@ -144,11 +172,19 @@ namespace Collections
             return result;
         }
 
+        /// <summary>
+        /// Gets the number of elements contained in the <see cref="SortedCollection{T}"/>
+        /// </summary>
         public int Count
         {
             get { return _items.Count; }
         }
 
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
         public T this[int index]
         {
             get { return _items[index]; }
@@ -162,6 +198,9 @@ namespace Collections
             OnCountChanged();
         }
 
+        /// <summary>
+        /// Occurs when an item is added, removed, changed, moved, or the entire list is refreshed.
+        /// </summary>
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -192,8 +231,19 @@ namespace Collections
                 CountChanged(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Occurs when a <see cref="Comparer"/> changes.
+        /// </summary>
         public event EventHandler ComparerChanged;
+
+        /// <summary>
+        /// Occurs when a <see cref="SortDirection"/> changes.
+        /// </summary>
         public event EventHandler SortDirectionChanged;
+
+        /// <summary>
+        /// Occurs when a <see cref="Count"/> changes.
+        /// </summary>
         public event EventHandler CountChanged;
     }
 }
