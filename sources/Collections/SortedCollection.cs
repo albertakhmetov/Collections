@@ -151,18 +151,29 @@ namespace Collections
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, notifyList, i + 1 - notifyList.Count));
         }
 
+        /// <summary>
+        /// Removes the element at the specified index of the <see cref="SortedCollection{T}"/>
+        /// </summary>
+        /// <param name="item">The object to remove from the <see cref="SortedCollection{T}"/>. The value can be null for reference types.</param>
         public void Remove(T item)
         {
             if (_items.Remove(item))
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
         }
 
+        /// <summary>
+        /// Removes the first occurrence of a specific object from the <see cref="SortedCollection{T}"/> 
+        /// </summary>
+        /// <param name="index">The zero-based index of the element to remove.</param>
         public void RemoveAt(int index)
         {
             if (index >= 0 && index < Count)
                 Remove(_items[index]);
         }
 
+        /// <summary>
+        /// Removes all elements from the <see cref="SortedCollection{T}"/>
+        /// </summary>
         public void Clear()
         {
             _items.Clear();
@@ -208,19 +219,6 @@ namespace Collections
             get { return _items[index]; }
         }
 
-        protected void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            if (CollectionChanged != null)
-                CollectionChanged(this, e);
-
-            OnCountChanged();
-        }
-
-        /// <summary>
-        /// Occurs when an item is added, removed, changed, moved, or the entire list is refreshed.
-        /// </summary>
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -249,6 +247,14 @@ namespace Collections
                 CountChanged(this, EventArgs.Empty);
         }
 
+        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (CollectionChanged != null)
+                CollectionChanged(this, e);
+
+            OnCountChanged();
+        }
+
         /// <summary>
         /// Occurs when a <see cref="Comparer"/> changes.
         /// </summary>
@@ -263,5 +269,10 @@ namespace Collections
         /// Occurs when a <see cref="Count"/> changes.
         /// </summary>
         public event EventHandler CountChanged;
+
+        /// <summary>
+        /// Occurs when an item is added, removed, changed, moved, or the entire list is refreshed.
+        /// </summary>
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
     }
 }
