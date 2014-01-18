@@ -157,6 +157,12 @@ namespace Collections
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
         }
 
+        public void RemoveAt(int index)
+        {
+            if (index >= 0 && index < Count)
+                Remove(_items[index]);
+        }
+
         private bool Compare(T x, T y)
         {
             return Comparer.Compare(x, y) == (SortDirection == Collections.SortDirection.Asc ? -1 : 1);
