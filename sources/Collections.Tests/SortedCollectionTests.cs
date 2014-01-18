@@ -213,7 +213,9 @@ namespace Collections
 
         private void CheckCollectionOrder()
         {
-            var expected = _sortedCollection.OrderBy(i => i).ToArray();
+            var expected = (_sortedCollection.SortDirection == SortDirection.Asc ?
+                _sortedCollection.OrderBy(i => i, _sortedCollection.Comparer) :
+                _sortedCollection.OrderByDescending(i => i, _sortedCollection.Comparer)).ToArray();
 
             for (var i = 0; i < expected.Length; i++)
                 Assert.AreEqual(expected[i], _sortedCollection[i]);
@@ -259,6 +261,31 @@ namespace Collections
             _sortedCollection.Add(5);
             _sortedCollection.Add(7);
 
+            _sortedCollection.AddRange(items);
+
+            Assert.AreEqual(7, _sortedCollection.Count);
+            CheckCollectionOrder();
+        }
+
+        [TestMethod]
+        public void SortDirectionTest()
+        {
+            _sortedCollection = new SortedCollection<int>(true);
+            _sortedCollection.Add(1);
+            _sortedCollection.Add(3);
+            _sortedCollection.Add(5);
+            _sortedCollection.Add(7);
+
+            CheckCollectionOrder();
+
+            var wasResetInvoked = false;
+
+            _sortedCollection.CollectionChanged += (x, y) => wasResetInvoked = y.Action == NotifyCollectionChangedAction.Reset;
+            _sortedCollection.SortDirection = SortDirection.Desc;
+            Assert.IsTrue(wasResetInvoked);
+            CheckCollectionOrder();
+
+            var items = new int[] { 1, 3, 4, 5, 5, 4, 6, 8, };
             _sortedCollection.AddRange(items);
 
             Assert.AreEqual(7, _sortedCollection.Count);
