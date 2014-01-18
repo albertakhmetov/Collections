@@ -336,5 +336,28 @@ namespace Collections
             Assert.AreEqual(5, _sortedCollection[2]);
             Assert.AreEqual(7, _sortedCollection[3]);
         }
+
+        [TestMethod]
+        public void RemoveTest()
+        {
+            _sortedCollection = new SortedCollection<int>(true);
+            _sortedCollection.Add(-3);
+            _sortedCollection.Add(-1);
+            _sortedCollection.Add(5);
+            _sortedCollection.Add(7);
+
+            var wasRemoveInvoked = false;
+            _sortedCollection.CollectionChanged += (x, y) => wasRemoveInvoked = y.Action == NotifyCollectionChangedAction.Remove 
+                && y.OldItems.Count == 1 && y.OldItems.Contains(5);
+            _sortedCollection.Remove(5);
+            Assert.IsTrue(wasRemoveInvoked);
+
+            Assert.AreEqual(3, _sortedCollection.Count);
+
+            Assert.AreEqual(-3, _sortedCollection[0]);
+            Assert.AreEqual(-1, _sortedCollection[1]);
+            Assert.AreEqual(7, _sortedCollection[2]);
+        }
+
     }
 }

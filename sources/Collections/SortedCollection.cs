@@ -71,7 +71,7 @@ namespace Collections
                     OnSortDirectionChanged();
                 }
             }
-        }       
+        }
 
         /// <summary>
         /// Gets a value indicating whether a <see cref="SortedCollection{T}"/> object has unique elements
@@ -149,6 +149,12 @@ namespace Collections
             }
             if (notifyList.Count > 0)
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, notifyList, i + 1 - notifyList.Count));
+        }
+
+        public void Remove(T item)
+        {
+            if (_items.Remove(item))
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
         }
 
         private bool Compare(T x, T y)
