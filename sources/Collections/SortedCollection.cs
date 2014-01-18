@@ -58,7 +58,14 @@ namespace Collections
 
             while (i <= _items.Count)
             {
-                if (i == _items.Count || itemsEnumerator.Current < _items[i])
+                if (IsUnique && i < _items.Count && itemsEnumerator.Current == _items[i])
+                {
+                    if (!itemsEnumerator.MoveNext())
+                        break;
+                    else
+                        continue;
+                }
+                else if (i == _items.Count || itemsEnumerator.Current < _items[i])
                 {
                     _items.Insert(i, itemsEnumerator.Current);
                     notifyList.Add(itemsEnumerator.Current);
@@ -80,7 +87,10 @@ namespace Collections
 
         private IEnumerable<int> Order(IEnumerable<int> items)
         {
-            return items.OrderBy(i => i);
+            if (IsUnique)
+                return items.OrderBy(i => i).Distinct();
+            else
+                return items.OrderBy(i => i);
         }
 
         public int Count

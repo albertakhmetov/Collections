@@ -246,5 +246,23 @@ namespace Collections
             Assert.AreEqual(12, _sortedCollection.Count);
             CheckCollectionOrder(_sortedCollection);
         }
+
+
+        [TestMethod]
+        public void AddNotUniqueRangeItems_IsUniqueTest()
+        {
+            var items = new int[] { 1, 3, 4, 5, 5, 4, 6, 8, };
+
+            _sortedCollection = new SortedCollection(true);
+            _sortedCollection.Add(1);
+            _sortedCollection.Add(3);
+            _sortedCollection.Add(5);
+            _sortedCollection.Add(7);
+
+            _sortedCollection.AddRange(items);
+
+            Assert.AreEqual(7, _sortedCollection.Count);
+            CheckCollectionOrder(_sortedCollection);
+        }
     }
 }
