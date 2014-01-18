@@ -195,6 +195,5 @@ namespace Collections
         public event EventHandler ComparerChanged;
         public event EventHandler SortDirectionChanged;
         public event EventHandler CountChanged;
-
     }
 }

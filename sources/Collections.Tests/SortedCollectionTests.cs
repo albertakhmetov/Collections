@@ -278,15 +278,21 @@ namespace Collections
 
             CheckCollectionOrder();
 
-            var wasResetInvoked = false;
+            var wasResetInvoked = false; 
+            var wasChanged = false;
+            var wasCountChanged = false;
 
+            _sortedCollection.SortDirectionChanged += (x, y) => wasChanged = true;
+            _sortedCollection.CountChanged += (x, y) => wasCountChanged = true;
             _sortedCollection.CollectionChanged += (x, y) => wasResetInvoked = y.Action == NotifyCollectionChangedAction.Reset;
             _sortedCollection.SortDirection = SortDirection.Desc;
+            Assert.IsTrue(wasChanged);
             Assert.IsTrue(wasResetInvoked);
             CheckCollectionOrder();
 
             var items = new int[] { 1, 3, 4, 5, 5, 4, 6, 8, };
             _sortedCollection.AddRange(items);
+            Assert.IsTrue(wasCountChanged);
 
             Assert.AreEqual(7, _sortedCollection.Count);
             CheckCollectionOrder();
