@@ -12,14 +12,26 @@ namespace Collections
 {
     public class SortedCollection : INotifyCollectionChanged, IEnumerable<int>
     {
-        private List<int> _items = new List<int>();
+        public SortedCollection(bool isUnique)
+        {
+            _items = new List<int>();
+            _isUnique = isUnique;
+        }
+
+        private List<int> _items;
+        private readonly bool _isUnique;
+
+        public bool IsUnique
+        {
+            get { return _isUnique; }
+        }
 
         public void Add(int item)
         {
             var i = 0;
 
             while (i <= _items.Count)
-                if (i < _items.Count && item == _items[i])
+                if (IsUnique && i < _items.Count && item == _items[i])
                     break;
                 else if (i == _items.Count || item < _items[i])
                 {
