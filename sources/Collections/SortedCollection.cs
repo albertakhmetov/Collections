@@ -1,4 +1,4 @@
-﻿/* Copyright © 2013, Albert Akhmetov (albert.akhmetov@hotmail.com) */
+﻿/* Copyright © 2013-2014, Albert Akhmetov (albert.akhmetov@hotmail.com) */
 
 using System;
 using System.Collections;
