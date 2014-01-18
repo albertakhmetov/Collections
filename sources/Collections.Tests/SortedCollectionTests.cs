@@ -13,46 +13,46 @@ namespace Collections
         [TestInitialize()]
         public void SetUp()
         {
-            _sortedCollection = new SortedCollection(false);
+            _sortedCollection = new SortedCollection<int>(false);
         }
 
-        private SortedCollection _sortedCollection;
+        private SortedCollection<int> _sortedCollection;
 
         [TestMethod]
         public void AddTest()
         {
-            AddItem(_sortedCollection, 10, null, 1);
+            AddItem(10, null, 1);
         }
 
         [TestMethod]
         public void AddTwiceTest()
         {
-            AddItem(_sortedCollection, 3, null, 1);
-            AddItem(_sortedCollection, 2, 0, 2);
+            AddItem(3, null, 1);
+            AddItem(2, 0, 2);
 
-            CheckCollectionOrder(_sortedCollection);
+            CheckCollectionOrder();
         }
 
         [TestMethod]
         public void Add3xTest()
         {
-            AddItem(_sortedCollection, 5, null, 1);
-            AddItem(_sortedCollection, 2, 0, 2);
-            AddItem(_sortedCollection, 3, 1, 3);
+            AddItem(5, null, 1);
+            AddItem(2, 0, 2);
+            AddItem(3, 1, 3);
 
-            CheckCollectionOrder(_sortedCollection);
+            CheckCollectionOrder();
         }
 
         [TestMethod]
         public void Add5xTest()
         {
-            AddItem(_sortedCollection, 5, null, 1);
-            AddItem(_sortedCollection, 2, 0, 2);
-            AddItem(_sortedCollection, 4, 1, 3);
-            AddItem(_sortedCollection, 3, 1, 4);
-            AddItem(_sortedCollection, 10, 4, 5);
+            AddItem(5, null, 1);
+            AddItem(2, 0, 2);
+            AddItem(4, 1, 3);
+            AddItem(3, 1, 4);
+            AddItem(10, 4, 5);
 
-            CheckCollectionOrder(_sortedCollection);
+            CheckCollectionOrder();
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace Collections
         [TestMethod]
         public void AddExists_IsUniqueTest()
         {
-            _sortedCollection = new SortedCollection(true);
+            _sortedCollection = new SortedCollection<int>(true);
             _sortedCollection.Add(1);
             _sortedCollection.Add(0);
 
@@ -85,7 +85,7 @@ namespace Collections
         }
 
 
-        private static void AddItem(SortedCollection sortedCollection, int item, int? position, int totalCount)
+        private void AddItem(int item, int? position, int totalCount)
         {
             var wasInvoke = false;
 
@@ -101,13 +101,13 @@ namespace Collections
                 Assert.AreEqual(item, e.NewItems[0]);
             };
 
-            sortedCollection.CollectionChanged += eventHandler;
-            sortedCollection.Add(item);
+            _sortedCollection.CollectionChanged += eventHandler;
+            _sortedCollection.Add(item);
 
-            Assert.AreEqual(totalCount, sortedCollection.Count);
+            Assert.AreEqual(totalCount, _sortedCollection.Count);
             Assert.IsTrue(wasInvoke);
 
-            sortedCollection.CollectionChanged -= eventHandler;
+            _sortedCollection.CollectionChanged -= eventHandler;
         }
 
         [TestMethod]
@@ -129,7 +129,7 @@ namespace Collections
 
             Assert.AreEqual(1, invokeCount);
             Assert.AreEqual(items.Length, _sortedCollection.Count);
-            CheckCollectionOrder(_sortedCollection);
+            CheckCollectionOrder();
         }
 
         [TestMethod]
@@ -156,7 +156,7 @@ namespace Collections
 
             Assert.AreEqual(1, invokeCount);
             Assert.AreEqual(items.Length + sortedCollectionInitSize, _sortedCollection.Count);
-            CheckCollectionOrder(_sortedCollection);
+            CheckCollectionOrder();
         }
 
         [TestMethod]
@@ -192,7 +192,7 @@ namespace Collections
             Assert.AreEqual(expectedInvokeLen.Length, invokeCount);
             Assert.AreEqual(items.Length + sortedCollectionInitSize, _sortedCollection.Count);
 
-            CheckCollectionOrder(_sortedCollection);
+            CheckCollectionOrder();
         }
 
         [TestMethod]
@@ -208,15 +208,15 @@ namespace Collections
 
             _sortedCollection.AddRange(items);
 
-            CheckCollectionOrder(_sortedCollection);
+            CheckCollectionOrder();
         }
 
-        private static void CheckCollectionOrder(SortedCollection sortedCollection)
+        private void CheckCollectionOrder()
         {
-            var expected = sortedCollection.OrderBy(i => i).ToArray();
+            var expected = _sortedCollection.OrderBy(i => i).ToArray();
 
             for (var i = 0; i < expected.Length; i++)
-                Assert.AreEqual(expected[i], sortedCollection[i]);
+                Assert.AreEqual(expected[i], _sortedCollection[i]);
         }
 
         [TestMethod]
@@ -244,7 +244,7 @@ namespace Collections
             _sortedCollection.AddRange(items);
 
             Assert.AreEqual(12, _sortedCollection.Count);
-            CheckCollectionOrder(_sortedCollection);
+            CheckCollectionOrder();
         }
 
 
@@ -253,7 +253,7 @@ namespace Collections
         {
             var items = new int[] { 1, 3, 4, 5, 5, 4, 6, 8, };
 
-            _sortedCollection = new SortedCollection(true);
+            _sortedCollection = new SortedCollection<int>(true);
             _sortedCollection.Add(1);
             _sortedCollection.Add(3);
             _sortedCollection.Add(5);
@@ -262,7 +262,7 @@ namespace Collections
             _sortedCollection.AddRange(items);
 
             Assert.AreEqual(7, _sortedCollection.Count);
-            CheckCollectionOrder(_sortedCollection);
+            CheckCollectionOrder();
         }
     }
 }

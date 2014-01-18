@@ -10,30 +10,37 @@ using System.Threading.Tasks;
 
 namespace Collections
 {
-    public class SortedCollection : INotifyCollectionChanged, IEnumerable<int>
+    public class SortedCollection<T> : INotifyCollectionChanged, IEnumerable<T>
     {
         public SortedCollection(bool isUnique)
         {
-            _items = new List<int>();
+            _items = new List<T>();
             _isUnique = isUnique;
+            _comparer = null;
         }
 
-        private List<int> _items;
+        private List<T> _items;
         private readonly bool _isUnique;
+        private Comparer<T> _comparer;
+
+        public Comparer<T> Comparer
+        {
+            get { return _comparer ?? Comparer<T>.Default; }
+        }
 
         public bool IsUnique
         {
             get { return _isUnique; }
         }
 
-        public void Add(int item)
+        public void Add(T item)
         {
             var i = 0;
 
             while (i <= _items.Count)
-                if (IsUnique && i < _items.Count && item == _items[i])
+                if (IsUnique && i < _items.Count && Comparer.Compare(item, _items[i]) == 0)
                     break;
-                else if (i == _items.Count || item < _items[i])
+                else if (i == _items.Count || Comparer.Compare(item, _items[i]) == -1)
                 {
                     _items.Insert(i, item);
 
@@ -44,28 +51,28 @@ namespace Collections
                     i++;
         }
 
-        public void AddRange(IEnumerable<int> items)
+        public void AddRange(IEnumerable<T> items)
         {
             if (items == null)
                 return;
 
-            var itemsEnumerator = Order(items).GetEnumerator();
+            var itemsEnumerator = PrepareItemsToAdd(items).GetEnumerator();
             if (!itemsEnumerator.MoveNext())
                 return;
 
             var i = 0;
-            var notifyList = new List<int>();
+            var notifyList = new List<T>();
 
             while (i <= _items.Count)
             {
-                if (IsUnique && i < _items.Count && itemsEnumerator.Current == _items[i])
+                if (IsUnique && i < _items.Count && Comparer.Compare(itemsEnumerator.Current, _items[i]) == 0)
                 {
                     if (!itemsEnumerator.MoveNext())
                         break;
                     else
                         continue;
                 }
-                else if (i == _items.Count || itemsEnumerator.Current < _items[i])
+                else if (i == _items.Count || Comparer.Compare(itemsEnumerator.Current,_items[i]) == -1)
                 {
                     _items.Insert(i, itemsEnumerator.Current);
                     notifyList.Add(itemsEnumerator.Current);
@@ -85,12 +92,12 @@ namespace Collections
                 OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, notifyList, i + 1 - notifyList.Count));
         }
 
-        private IEnumerable<int> Order(IEnumerable<int> items)
+        private IEnumerable<T> PrepareItemsToAdd(IEnumerable<T> items)
         {
             if (IsUnique)
-                return items.OrderBy(i => i).Distinct();
+                return items.OrderBy(i => i, Comparer).Distinct();
             else
-                return items.OrderBy(i => i);
+                return items.OrderBy(i => i, Comparer);
         }
 
         public int Count
@@ -98,7 +105,7 @@ namespace Collections
             get { return _items.Count; }
         }
 
-        public int this[int index]
+        public T this[int index]
         {
             get { return _items[index]; }
         }
@@ -116,7 +123,7 @@ namespace Collections
             return GetEnumerator();
         }
 
-        public IEnumerator<int> GetEnumerator()
+        public IEnumerator<T> GetEnumerator()
         {
             return _items.GetEnumerator();
         }
